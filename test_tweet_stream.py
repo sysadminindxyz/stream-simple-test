@@ -5,6 +5,7 @@ import plotly.express as px
 import os
 from databricks import sql
 
+
 # Access secrets
 db_host = st.secrets["databricks"]["host"]
 db_token = st.secrets["databricks"]["token"]
@@ -28,16 +29,24 @@ conn = sql.connect(
 )
 
 # Example: query a Delta table
-query = "SELECT * FROM glp1_tweets_table"
-df = conn.sql(query).to_pandas()
+query = "SELECT * FROM tweets_delta_glp1"
+cursor = conn.cursor()
+cursor.execute(query)
+rows=cursor.fetchall()
+columns = [desc[0] for desc in cursor.description]
+# Convert to DataFrame
+df = pd.DataFrame(rows, columns=columns)
+
+cursor.close()
 conn.close()
 
 
 # Load your data (replace this with your local CSV if needed)
-df = pd.read_csv("glp1_snacking_tweets_with_categorizations_and_authors.csv")
-df['created_at'] = pd.to_datetime(df['created_at'])
+# df = pd.read_csv("glp1_snacking_tweets_with_categorizations_and_authors.csv")
+# df['created_at'] = pd.to_datetime(df['created_at'])
 
 # --- Data summaries ---
+df['created_at'] = pd.to_datetime(df['created_at'])
 tweets_over_time = df.groupby(df['created_at'].dt.date).size().reset_index(name='tweet_count')
 food_perception_counts = df['Food_Industry_Perceptions'].value_counts(dropna=True).reset_index()
 food_perception_counts.columns = ['Perception', 'Count']
