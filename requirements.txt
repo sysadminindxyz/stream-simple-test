@@ -1,5 +1,4 @@
 streamlit>=1.20
 pandas>=1.5
-pyspark>=3.4
 plotly
 databricks-sql-connector

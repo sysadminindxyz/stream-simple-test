@@ -2,18 +2,28 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
 import os
 from databricks import sql
 
-# Load from Databricks instead of CSV
-db_host = os.getenv("https://dbc-e876cc08-ed7c.cloud.databricks.com/")
-db_token = os.getenv("dapi29b98cfd8a8eab1d9fd3139df54d2415")
-#http_path = os.getenv("DATABRICKS_HTTP_PATH")  # Typically needed
+# Access secrets
+db_host = st.secrets["databricks"]["host"]
+db_token = st.secrets["databricks"]["token"]
+http_path = st.secrets["databricks"]["http_path"]
+
+# # Example API call
+# headers = {"Authorization": f"Bearer {token}"}
+# response = requests.get(f"{host}/api/2.0/clusters/list", headers=headers)
+
+# if response.status_code == 200:
+#     st.write("✅ Connected to Databricks!")
+#     st.json(response.json())
+# else:
+#     st.error(f"❌ Connection failed: {response.status_code}")
+
 
 conn = sql.connect(
     server_hostname=db_host,
-#    http_path=http_path,
+    http_path=http_path,
     access_token=db_token,
 )
 
