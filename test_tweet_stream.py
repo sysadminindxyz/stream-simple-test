@@ -6,21 +6,44 @@ import os
 from databricks import sql
 
 
+###
+hide_streamlit_style = """
+    <style>
+        div[data-testid="stToolbar"] {
+            visibility: hidden;
+            height: 0%;
+            position: fixed;
+        }
+        div[data-testid="stDecoration"] {
+            visibility: hidden;
+            height: 0%;
+            position: fixed;
+        }
+        div[data-testid="stStatusWidget"] {
+            visibility: hidden;
+            height: 0%;
+            position: fixed;
+        }
+        #MainMenu {
+            visibility: hidden;
+            height: 0%;
+        }
+        header {
+            visibility: hidden;
+            height: 0%;
+        }
+        footer {
+            visibility: hidden;
+            height: 0%;
+        }
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 # Access secrets
 db_host = st.secrets["databricks"]["host"]
 db_token = st.secrets["databricks"]["token"]
 http_path = st.secrets["databricks"]["http_path"]
-
-# # Example API call
-# headers = {"Authorization": f"Bearer {token}"}
-# response = requests.get(f"{host}/api/2.0/clusters/list", headers=headers)
-
-# if response.status_code == 200:
-#     st.write("✅ Connected to Databricks!")
-#     st.json(response.json())
-# else:
-#     st.error(f"❌ Connection failed: {response.status_code}")
-
 
 conn = sql.connect(
     server_hostname=db_host,
